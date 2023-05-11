@@ -19,7 +19,7 @@
 
 // };
 
-struct sockaddr_in socketaddress;
+struct sockaddr_in address;
 
 int main(int argc, char *argv[]) {
     int socketfd;
@@ -28,10 +28,16 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    memset(&socketaddress, 0, sizeof(socketaddress));
-    socketaddress.sin_family = AF_INET;
-    socketaddress.sin_addr.s_addr = inet_addr("127.0.0.1");
-    socketaddress.sin_port = htons(8000);
-    printf("%hu\n", socketaddress.sin_port);
+    memset(&address, 0, sizeof(address));
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr("127.0.0.1");
+    address.sin_port = htons(8000);
+
+    if(bind(socketfd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+        fprintf(stderr, "bind failed\n");
+        exit(1);
+    }
+
+    printf("Socket bound to address %s:%d\n", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
     exit(0);
 }

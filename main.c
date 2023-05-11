@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 // struct in_addr
 // {
@@ -29,7 +30,8 @@ int main(int argc, char *argv[]) {
 
     memset(&socketaddress, 0, sizeof(socketaddress));
     socketaddress.sin_family = AF_INET;
-
-    printf("%d\n", socketfd);
+    socketaddress.sin_addr.s_addr = inet_addr("127.0.0.1");
+    socketaddress.sin_port = htons(8000);
+    printf("%hu\n", socketaddress.sin_port);
     exit(0);
 }

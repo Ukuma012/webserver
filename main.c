@@ -5,6 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#define backlog 3
+
 // struct in_addr
 // {
 //         ip_addr_t s_addr;
@@ -16,7 +18,6 @@
 //      unsigned short sin_port;
 //      struct in_addr sin_addr;
 //      unsigned char  sin_zero[8];
-
 // };
 
 struct sockaddr_in address;
@@ -37,6 +38,13 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "bind failed\n");
         exit(1);
     }
+
+    if(listen(socketfd, backlog) < 0) {
+        fprintf(stderr, "listen failed\n");
+        exit(1);
+    }
+
+    printf("%s", "Socket is listening\n");
 
     printf("Socket bound to address %s:%d\n", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
     exit(0);

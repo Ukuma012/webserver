@@ -20,7 +20,7 @@
 //      unsigned char  sin_zero[8];
 // };
 
-struct sockaddr_in address;
+struct sockaddr_in server_address;
 
 int main(int argc, char *argv[]) {
     int socketfd;
@@ -29,12 +29,12 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    memset(&address, 0, sizeof(address));
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr("127.0.0.1");
-    address.sin_port = htons(8000);
+    memset(&server_address, 0, sizeof(server_address));
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server_address.sin_port = htons(8000);
 
-    if(bind(socketfd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+    if(bind(socketfd, (struct sockaddr *)&server_address, sizeof(server_address)) < 0) {
         fprintf(stderr, "bind failed\n");
         exit(1);
     }
@@ -46,6 +46,6 @@ int main(int argc, char *argv[]) {
 
     printf("%s", "Socket is listening\n");
 
-    printf("Socket bound to address %s:%d\n", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+    printf("Socket bound to address %s:%d\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
     exit(0);
 }

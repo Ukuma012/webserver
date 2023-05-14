@@ -66,8 +66,15 @@ int main(int argc, char *argv[])
             }
             recvmsg[recv_len] = '\0';
             printf("%s\n", recvmsg);
-            continue;
+            break;
         }
+    }
+
+    char *status_response = "200";
+    int status_response_len = strlen(status_response);
+    if(send(client_socketfd, status_response, status_response_len, 0) < 0) {
+        fprintf(stderr, "send failed\n");
+        exit(1);
     }
 
     exit(0);

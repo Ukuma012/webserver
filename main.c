@@ -56,7 +56,17 @@ int main(int argc, char *argv[])
     {
         if ((client_socketfd = accept(socketfd, (struct sockaddr *)&client_address, &len)) > 0)
         {
-            printf("%s\n", "accept success");
+            char recvmsg[4000];
+            int recvmsg_len = sizeof(recvmsg) - 1;
+            int recv_len = recv(client_socketfd, recvmsg, recvmsg_len, 0);
+
+            if(recv_len < 0) {
+                fprintf(stderr, "recv failed\n");
+                exit(1);
+            }
+            recvmsg[recv_len] = '\0';
+            printf("%s\n", recvmsg);
+   
             break;
         }
     }

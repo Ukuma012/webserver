@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     {
         if ((client_socketfd = accept(socketfd, (struct sockaddr *)&client_address, &len)) > 0)
         {
-            char recvmsg[2048];
+            char recvmsg[4096];
             int recvmsg_len = sizeof(recvmsg) - 1;
             int recv_len = recv(client_socketfd, recvmsg, recvmsg_len, 0);
 

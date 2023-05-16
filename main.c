@@ -60,19 +60,32 @@ int main(int argc, char *argv[])
             int recvmsg_len = sizeof(recvmsg) - 1;
             int recv_len = recv(client_socketfd, recvmsg, recvmsg_len, 0);
 
-            if(recv_len < 0) {
+            if (recv_len < 0)
+            {
                 fprintf(stderr, "recv failed\n");
                 exit(1);
             }
             recvmsg[recv_len] = '\0';
-            printf("%s\n", recvmsg);
+
+            char *request = strdup(recvmsg);
+            char *token;
+            char *saveptr;
+
+            token = strtok_r(request, "\r\n", &saveptr);
+            while (token != NULL)
+            {
+                printf("%s\n", token);
+                token = strtok_r(NULL, "\r\n", &saveptr);
+            }
+            free(request);
             break;
         }
     }
 
     char *status_response = "200";
     int status_response_len = strlen(status_response);
-    if(send(client_socketfd, status_response, status_response_len, 0) < 0) {
+    if (send(client_socketfd, status_response, status_response_len, 0) < 0)
+    {
         fprintf(stderr, "send failed\n");
         exit(1);
     }

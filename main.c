@@ -69,16 +69,14 @@ int main(int argc, char *argv[])
 
             char *request = strdup(recvmsg);
             char *token;
-            char *saveptr;
 
-            token = strtok_r(request, "\r\n", &saveptr);
-            while (token != NULL)
+            while ((token = strsep(&request, "\r\n")) != NULL)
             {
-                printf("%s\n", token);
-                token = strtok_r(NULL, "\r\n", &saveptr);
+                printf("%s", token);
+                fflush(stdout);
             }
+
             free(request);
-            break;
         }
     }
 

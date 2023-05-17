@@ -119,6 +119,8 @@ int main(int argc, char *argv[])
     }
 
     close(response_fd);
+    close(client_socketfd);
+    close(socketfd);
 
-    exit(0);
+    return 0;
 }

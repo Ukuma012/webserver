@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
             while ((token = strsep(&request, "\r\n")) != NULL)
             {
-                printf("%s", token);
+                printf("%s\n", token);
                 fflush(stdout);
             }
 

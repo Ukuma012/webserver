@@ -2,8 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 
 #define backlog 3
 
@@ -77,16 +81,44 @@ int main(int argc, char *argv[])
             }
 
             free(request);
+            break;
         }
     }
 
-    char *status_response = "200";
-    int status_response_len = strlen(status_response);
-    if (send(client_socketfd, status_response, status_response_len, 0) < 0)
+    int response_fd = open("./public/response.txt", O_RDONLY);
+    if (response_fd < 0)
     {
-        fprintf(stderr, "send failed\n");
+        fprintf(stderr, "open failed\n");
         exit(1);
     }
+
+    char response[4096];
+    ssize_t read_bytes;
+    read_bytes = read(response_fd, response, sizeof(response) - 1);
+    if (read_bytes < 0)
+    {
+        fprintf(stderr, "read failed\n");
+        exit(1);
+    }
+
+    response[read_bytes] = '\0';
+    printf("%s\n", response);
+
+    int response_len = strlen(response);
+    ssize_t total_sent = 0;
+    ssize_t sent_bytes;
+    while (total_sent < response_len)
+    {
+        sent_bytes = send(client_socketfd, response + total_sent, response_len - total_sent, 0);
+        if (sent_bytes < 0)
+        {
+            fprintf(stderr, "send failed\n");
+            exit(1);
+        }
+        total_sent += sent_bytes;
+    }
+
+    close(response_fd);
 
     exit(0);
 }
